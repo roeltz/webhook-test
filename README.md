@@ -32,4 +32,4 @@ Enviar eventos de prueba desde el dashboard de la app en developers.facebook.com
 - Los archivos `/server.js`, `/package.json` y `/public/auth.html` no pasan de las
 150 líneas de código efectivas (LLOC) entre los tres, así que debería estar bien
 dentro de los parámetros de la prueba :D
-- /public/auth.html usa el JS SDK de Facebook, VueJS y Axios desde sus respectivos CDN
+- `/public/auth.html` usa el JS SDK de Facebook, VueJS y Axios desde sus respectivos CDN
