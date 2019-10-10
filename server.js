@@ -53,7 +53,7 @@ app.post("/install", async (req, res) => {
 			uri: `https://graph.facebook.com/v4.0/${req.body.id}/subscribed_apps`,
 			body: {
 				access_token: req.body.access_token,
-				subscribed_fields: "conversations,feed"
+				subscribed_fields: "feed"
 			},
 			json: true
 		});
