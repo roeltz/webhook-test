@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Autorizar Página</title>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+	<main>
+		<section v-if="auth">
+			<h1>Seleccionar página</h1>
+			<ul>
+				<li v-for="p in pages">
+					<input :id="p.id" type="radio" @click="selectPage(p)">
+					<label :for="p.id">{{ p.name }}</label>
+				</li>
+			</ul>
+			<footer>
+				<button :disabled="!selectedPage" @click="install">Instalar app en página</button>
+			</footer>
+		</section>
+		<section v-else>
+			<h1>Iniciar sesión</h1>
+			<button @click="startLogin">Entrar con Facebook</button>
+		</section>
+	</main>
+	<script>
+		let app = new Vue({
+			el: "main",
+			data: () => ({
+				auth: null,
+				pages: [],
+				selectedPage: null
+			}),
+			methods: {
+				fetchPages() {
+					FB.api(`/${this.auth.userID}/accounts`, r => {
+						this.pages = r.data;
+						console.log("Pages:", this.pages);
+					});
+				},
+				install() {
+					axios.post("install", this.selectedPage).then(() => {
+						alert("App installed on page");
+					}).catch(() => {
+						alert("Error while installing app on page");
+					});
+				},
+				selectPage(page) {
+					this.selectedPage = page;
+				},
+				setAuth(auth) {
+					this.auth = auth;
+					this.fetchPages();
+				},
+				startLogin() {
+					FB.login(r => {
+						this.setAuth(r.authResponse);
+					}, {scope: "manage_pages"});
+				}
+			}
+		});
+
+		window.fbAsyncInit = function() {
+			FB.init({
+				appId            : '408135436779827',
+				autoLogAppEvents : false,
+				xfbml            : false,
+				version          : 'v4.0'
+			});
+			FB.getLoginStatus(r => {
+				if (r.status === "connected") {
+					app.setAuth(r.authResponse);
+				}
+			});
+		};
+	  </script>
+	  <script async defer src="https://connect.facebook.net/en_US/sdk.js"></script>
+</body>
+</html>
